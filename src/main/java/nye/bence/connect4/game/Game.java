@@ -8,9 +8,6 @@ public class Game {
     }
 
     public void next() {
-        //TODO
-    }
-    public void clear() {
-        //TODO
+
     }
 }

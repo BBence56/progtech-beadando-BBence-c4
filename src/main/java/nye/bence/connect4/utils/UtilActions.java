@@ -50,27 +50,53 @@ public class UtilActions {
                 return true;
             }
         }
+
         count = 0;
-
-        if(lastY == lastX){
-            for (int i = 0; i < SIZE_X; i++) {
-                if (b[i][i]==lastValue){
-                    count++;
-                }else{
-                    count = 0;
-                }
-                if (count == 4){
-                    return true;
-                }
-            }
-            count = 0;
-
-            for (int i = 0; i < ; i++) {
-                
-            }
+        int i = lastX;
+        int j = lastY;
+        while(i < SIZE_X & j < SIZE_Y & b[i][j] == lastValue){
+            i++;
+            j++;
+            count ++;
         }
-        
+        if (count == 3) {
+            return true;
+        }
+        i = lastX;
+        j = lastY;
+        while (i >= 0 & j >=0 &b[i][j]== lastValue ){
+            i--;
+            j--;
+            count++;
+        }
+        if (count == 3){
+            return true;
+        }
 
+
+        count = 0;
+        i = lastX;
+        j = lastY;
+        while(i < SIZE_X & j >= 0 & b[i][j] == lastValue){
+            i++;
+            j--;
+            count ++;
+        }
+        if (count == 3) {
+            return true;
+        }
+        i = lastX;
+        j = lastY;
+        while (i >= 0 & j < SIZE_Y &b[i][j]== lastValue ){
+            i--;
+            j++;
+            count++;
+        }
+        if (count == 3){
+            return true;
+        }
+
+        return false;
     }
 
 }
