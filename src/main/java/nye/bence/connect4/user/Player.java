@@ -4,9 +4,10 @@ import nye.bence.connect4.utils.*;
 
 public class Player {
 
+    //későbbi feladatokhoz eltároljuk a nevét és a pontszámát
     private int val;
     private String name;
-    private int score;
+    private int score; //subject to change
 
 
     public Player(String name) {
@@ -20,6 +21,7 @@ public class Player {
         return name;
     }
 
+    //util package UtilActions place függvényét használva le rak egy korongot
     public void place(int x, int[][] b, int SIZE_Y){
         UtilActions.place(x,b,SIZE_Y,val);
     }
