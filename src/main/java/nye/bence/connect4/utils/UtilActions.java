@@ -5,112 +5,87 @@ public class UtilActions {
     static int lastValue;
 
     //kiírja a táblát
-    public static void printBoard(char[][] board) {
-        for (char[] chars : board) {
-            for (char aChar : chars) {
-                System.out.print(aChar + " ");
-            }
-            System.out.println();
-        }
-    }
+
 
     //megnézi hogy az első sor üres-e ha igen le lehet tenni a korongot
     private static boolean canPlace(int x, int[][] b){
-        return b[x][0]==0;
+        return b[0][x]==0;
     }
 
     //Egyszerű place függvény
 
-    public static int[][] place(int x, int[][] b, int SIZE_Y,int val){
+    public static void place(int x, int[][] b, int SIZE_Y, int val){
         //utils canPlace függvényel megnézi hogy le tudja e tenni a korongot
         if (canPlace(x,b)){
-            int i=0;
-            while(i<SIZE_Y & b[x][i]==0){
-                i++;
-            }
+            int i;
+            for (i = 0; i < SIZE_Y && b[i][x] == 0; i++){
+                //nem kell test mivel csak az i értéke miatt megy végig a cikluson
+            };
+
             lastX = x;
             lastY = i-1;
             lastValue = val;
-            b[x][i-1]=val;
-            return b;
+            b[i-1][x]=val;
         }
-        return b;
     }
 
 
     //Hajnal fél 4 re végeztem vele vér izzadással de működnie kéne...
-    public static boolean isOver(int[][] b,int SIZE_X,int SIZE_Y){
+    //nem működik
 
-        //count a megtalált azonos korongok száma egy sorban/átlóban (connect4 lényege)
+    //megnézi hogy vége van e a játéknak
+    public static boolean isOver(int[][] b, int SIZE_X, int SIZE_Y) {
         int count = 0;
-        //először a relatív korong allatt keresi 3 al ha nem talál 3at tovább halad mivel fölötte nem lehet korong
-        if (lastY < 4 & b[lastX][lastY+1]==lastValue&
-                        b[lastX][lastY+2]==lastValue&
-                        b[lastX][lastY+3]==lastValue)
-        {
+
+        // függőleges y-
+        if (lastY + 3 < SIZE_Y && b[lastY + 1][lastX] == lastValue &&
+                b[lastY + 2][lastX] == lastValue && b[lastY + 3][lastX] == lastValue) {
             return true;
         }
-        //utánna végig megy a vízszintes tengelyen itt egyszerűbbnek tartottam az egészen végig iterálni
-        for (int i = 0; i < SIZE_X; i++) {
-            if (b[i][lastY]==lastValue){
+
+        // vízszintes x+-
+        count = 1;
+        for (int i = 1; i <= 3; i++) {
+            if (lastX + i < SIZE_X && b[lastY][lastX + i] == lastValue) {
                 count++;
-            }else{
-                count = 0;
-            }
-            if (count == 4){
-                return true;
+            } else {
+                break;
             }
         }
-        //kezdődik a buli
-
-        //először végig iterál a x+1,y+1 sorozaton és ha egyezés van az értékek közt a countot növeli
-        count = 0;
-        int i = lastX;
-        int j = lastY;
-        while(i < SIZE_X & j < SIZE_Y & b[i][j] == lastValue){
-            i++;
-            j++;
-            count ++;
+        for (int i = 1; i <= 3; i++) {
+            if (lastX - i >= 0 && b[lastY][lastX - i] == lastValue) {
+                count++;
+            } else {
+                break;
+            }
         }
-        if (count == 3) {
+        if (count >= 4) {
             return true;
         }
-        //ha nem sikerült megtalálni a 3at végig iterál a x-1,y-1 sorozaton
-        i = lastX;
-        j = lastY;
-        while (i >= 0 & j >=0 &b[i][j]== lastValue ){
-            i--;
-            j--;
+
+        // átlósan +y+x irányba
+        count = 0;
+        for (int i = lastY +1, j = lastX +1; i < SIZE_Y && j < SIZE_X && b[i][j] == lastValue; i++, j++) {
             count++;
         }
-        //ha a count elérte a 3 at megvan a connect4
-        if (count == 3){
-            return true;
-        }
-
-
-        //a következő 2 return is ezen az elven működik csak tükrözve
-        count = 0;
-        i = lastX;
-        j = lastY;
-
-        while(i < SIZE_X & j >= 0 & b[i][j] == lastValue){
-            i++;
-            j--;
-            count ++;
-        }
-
-        if (count == 3) {
-            return true;
-        }
-        i = lastX;
-        j = lastY;
-        while (i >= 0 & j < SIZE_Y &b[i][j]== lastValue ){
-            i--;
-            j++;
+        //átlósan -y-x irányba
+        for (int i = lastY - 1, j = lastX - 1; i >= 0 && j >= 0 && b[i][j] == lastValue; i--, j--) {
             count++;
         }
-        if (count == 3){
+        if (count >= 3) {
+            return true;
+        }
+
+        // átlósan +y-x irányba
+        count = 0;
+        for (int i = lastY+1, j = lastX-1; i < SIZE_Y && j >= 0 && b[i][j] == lastValue; i++, j--) {
+            count++;
+        }
+        //átlósan -y+x irányba
+        for (int i = lastY - 1, j = lastX + 1; i >= 0 && j < SIZE_X && b[i][j] == lastValue; i--, j++) {
+            count++;
+        }
+        if (count >= 3) {
             return true;
         }
 
