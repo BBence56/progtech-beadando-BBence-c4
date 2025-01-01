@@ -4,8 +4,22 @@ import nye.bence.database.Database;
 import nye.bence.ui.UserInterface;
 import nye.bence.user.Player;
 
-public class App {
-    public static void main(String[] args) {
+/**
+ * Main application class.
+ */
+public final class App {
+
+    // Private constructor to prevent instantiation
+    private App() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
+    /**
+     * Main method to run the application.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(final String[] args) {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
@@ -15,7 +29,7 @@ public class App {
         }
 
         Database database = new Database();
-        UserInterface ui = new UserInterface(database);
+        UserInterface userInterface = new UserInterface(database);
 
         Player player = null;
         boolean exit = false;
@@ -26,15 +40,15 @@ public class App {
             System.out.println("2. Register");
             System.out.println("3. Close Game");
             System.out.print("Choose an option: ");
-            int choice = ui.scanner.nextInt();
-            ui.scanner.nextLine();
+            int choice = userInterface.getScanner().nextInt();
+            userInterface.getScanner().nextLine();
 
             switch (choice) {
                 case 1:
-                    player = ui.login();
+                    player = userInterface.login();
                     break;
                 case 2:
-                    player = ui.register();
+                    player = userInterface.register();
                     break;
                 case 3:
                     exit = true;
@@ -44,7 +58,7 @@ public class App {
             }
 
             if (player != null) {
-                ui.showMenu(player);
+                userInterface.showMenu(player);
                 player = null;
             }
         }

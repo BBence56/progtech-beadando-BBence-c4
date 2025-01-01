@@ -9,15 +9,56 @@ import nye.bence.game.Game;
 import nye.bence.user.Player;
 import nye.bence.util.GameSaveManager;
 
+/**
+ * User interface class for interacting with the player.
+ */
 public class UserInterface {
-    private Database database;
-    public Scanner scanner;
 
-    public UserInterface(Database database) {
-        this.database = database;
+    /**
+     * The database instance.
+     */
+    private final Database database;
+
+    /**
+     * The scanner for user input.
+     */
+    private Scanner scanner;
+
+    /**
+     * Constructs a new UserInterface with the specified database.
+     *
+     * @param databaseParam the database
+     */
+    public UserInterface(final Database databaseParam) {
+        this.database = databaseParam;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Sets the scanner.
+     *
+     * @param scanner the scanner to set
+     */
+    public void setScanner(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    /**
+     * Returns the scanner.
+     *
+     * @return the scanner
+     */
+    public Scanner getScanner() {
+        return scanner;
+    }
+
+
+
+    /**
+     * Registers a new player.
+     *
+     * @return the registered player, or null if registration failed
+     */
     public Player register() {
         System.out.println("-------------------------------------");
         System.out.print("Enter your name: ");
@@ -37,6 +78,11 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Logs in an existing player.
+     *
+     * @return the logged-in player, or null if login failed
+     */
     public Player login() {
         System.out.println("-------------------------------------");
         System.out.print("Enter your name: ");
@@ -56,7 +102,12 @@ public class UserInterface {
         }
     }
 
-    public void showMenu(Player player) {
+    /**
+     * Shows the main menu to the player.
+     *
+     * @param player the player
+     */
+    public void showMenu(final Player player) {
         boolean exit = false;
         while (!exit) {
             System.out.println("-------------------------------------");
@@ -90,24 +141,34 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Shows the scoreboard.
+     */
     public void showScoreboard() {
         System.out.println("-------------------------------------");
         try {
             List<Player> topPlayers = database.getTopPlayers();
             System.out.println("Top 20 Players:");
             for (Player player : topPlayers) {
-                System.out.println(player.getName() + " - " + player.getWins() + " wins");
+                System.out.println(player.getName() + " - "
+                                 + player.getWins() + " wins");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void startGame(Player player, Board savedBoard) {
+    /**
+     * Starts a new game or continues a saved game.
+     *
+     * @param player the player
+     * @param savedBoard the saved board, or null to start a new game
+     */
+    public void startGame(final Player player, final Board savedBoard) {
         Game game;
         if (savedBoard != null) {
             game = new Game(player);
-            game.board = savedBoard;
+            game.setBoard(savedBoard);
         } else {
             game = new Game(player);
         }
@@ -115,33 +176,46 @@ public class UserInterface {
         boolean gameOver = false;
 
         while (!gameOver) {
-            game.board.printBoard(game.board.getBoard());
-            System.out.println("-------------------------------------");
-            System.out.print("Enter column to place your piece (or type 'exit' to save and quit): ");
+            game.getBoard().printBoard(game.getBoard().getBoard());
+            System.out.println(
+                    "-------------------------------------"
+            );
+            System.out.print(
+                              "Enter column to place your piece"
+                            + " (or type 'exit' to save and quit): "
+            );
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("exit")) {
-                GameSaveManager.saveGame(game.board, player);
+                GameSaveManager.saveGame(game.getBoard(), player);
                 return;
             }
 
             int column = Integer.parseInt(input);
 
-            if (game.playerPlace(column, game.board.getBoard())) {
-                game.board.printBoard(game.board.getBoard());
-                System.out.println("-------------------------------------");
+            if (game.playerPlace(column, game.getBoard().getBoard())) {
+                game.getBoard().printBoard(game.getBoard().getBoard());
+                System.out.println(
+                        "-------------------------------------"
+                );
                 try {
                     database.incrementPlayerWins(player.getName());
-                    System.out.println("You won! Your win count has been updated.");
+                    System.out.println(
+                            "You won! Your win count has been updated."
+                    );
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 gameOver = true;
             } else {
-                if (game.computerPlace(game.board.getBoard())) {
-                    game.board.printBoard(game.board.getBoard());
-                    System.out.println("-------------------------------------");
-                    System.out.println("The computer won. Better luck next time!");
+                if (game.computerPlace(game.getBoard().getBoard())) {
+                    game.getBoard().printBoard(game.getBoard().getBoard());
+                    System.out.println(
+                            "-------------------------------------"
+                    );
+                    System.out.println(
+                            "The computer won. Better luck next time!"
+                    );
                     gameOver = true;
                 }
             }

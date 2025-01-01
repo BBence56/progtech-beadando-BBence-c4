@@ -9,10 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 import nye.bence.user.Player;
 
+/**
+ * Database class for managing player data.
+ */
 public class Database {
-    private static final String URL = "jdbc:sqlite:src/main/resources/database.db";
 
-    public boolean playerExists(String name) throws SQLException {
+    /**
+     * The URL of the SQLite database.
+     */
+    private static final String URL =
+            "jdbc:sqlite:src/main/resources/database.db";
+
+    /**
+     * Checks if a player exists in the database.
+     *
+     * @param name the name of the player
+     * @return true if the player exists, false otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    public boolean playerExists(final String name) throws SQLException {
         String sql = "SELECT COUNT(*) FROM player WHERE name = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -23,7 +38,13 @@ public class Database {
         }
     }
 
-    public void registerPlayer(String name) throws SQLException {
+    /**
+     * Registers a new player in the database.
+     *
+     * @param name the name of the player
+     * @throws SQLException if a database access error occurs
+     */
+    public void registerPlayer(final String name) throws SQLException {
         String sql = "INSERT INTO player (name, wins) VALUES (?, 0)";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -32,7 +53,14 @@ public class Database {
         }
     }
 
-    public Player loginPlayer(String name) throws SQLException {
+    /**
+     * Logs in a player by retrieving their data from the database.
+     *
+     * @param name the name of the player
+     * @return the Player object if the player exists, null otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    public Player loginPlayer(final String name) throws SQLException {
         String sql = "SELECT * FROM player WHERE name = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -46,7 +74,13 @@ public class Database {
         }
     }
 
-    public void incrementPlayerWins(String name) throws SQLException {
+    /**
+     * Increments the win count of a player.
+     *
+     * @param name the name of the player
+     * @throws SQLException if a database access error occurs
+     */
+    public void incrementPlayerWins(final String name) throws SQLException {
         String sql = "UPDATE player SET wins = wins + 1 WHERE name = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -55,14 +89,22 @@ public class Database {
         }
     }
 
+    /**
+     * Retrieves the top 20 players sorted by their win count.
+     *
+     * @return a list of the top 20 players
+     * @throws SQLException if a database access error occurs
+     */
     public List<Player> getTopPlayers() throws SQLException {
-        String sql = "SELECT name, wins FROM player ORDER BY wins DESC LIMIT 20";
+        String sql = "SELECT name, wins FROM player"
+                   + " ORDER BY wins DESC LIMIT 20";
         List<Player> topPlayers = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                topPlayers.add(new Player(rs.getString("name"), rs.getInt("wins")));
+                topPlayers.add(new Player(rs.getString("name"),
+                                          rs.getInt("wins")));
             }
         }
         return topPlayers;
