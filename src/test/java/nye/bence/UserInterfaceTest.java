@@ -5,7 +5,7 @@ import nye.bence.user.Player;
 import nye.bence.ui.UserInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
 
 import java.sql.SQLException;
 import java.util.Scanner;
