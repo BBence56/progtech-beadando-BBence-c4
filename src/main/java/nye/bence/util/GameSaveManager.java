@@ -2,6 +2,8 @@ package nye.bence.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -94,12 +96,13 @@ public final class GameSaveManager {
     public static Board loadGame(final Player player) {
         try {
             File file = new File("saves/" + player.getName() + "_save.xml");
-            if (!file.exists()) {
+            if (!file.exists() || file.length() == 0) {
+                System.out.println("-------------------------------------");
+                System.out.println("There's no save for this user.");
                 return null;
             }
 
-            DocumentBuilderFactory docFactory =
-                    DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(file);
 
@@ -116,6 +119,8 @@ public final class GameSaveManager {
                 int value = Integer.parseInt(cell.getAttribute("value"));
                 boardArray[y][x] = value;
             }
+
+            Files.delete(Path.of(file.getPath()));
 
             return board;
 

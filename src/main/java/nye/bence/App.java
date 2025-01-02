@@ -4,6 +4,8 @@ import nye.bence.database.Database;
 import nye.bence.ui.UserInterface;
 import nye.bence.user.Player;
 
+import java.sql.SQLException;
+
 /**
  * Main application class.
  */
@@ -19,7 +21,7 @@ public final class App {
      *
      * @param args the command line arguments
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
