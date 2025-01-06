@@ -28,8 +28,6 @@ maven:
   majdnem minden maven checkstyle hiba ki van javítva.
 
 
-A kód és a dokumentáció angul lett írva mivel ezt könnyebbnek éreztem mint fejben mindent fordítani.
-
 A maven configuráció, unit testek, adatbázis kezelés néhány részét github copilottal oldottam meg.
 
 A dokumentációt és a maven checkstyle hibákat teljesen github copilottal készítettem és javítottam.
