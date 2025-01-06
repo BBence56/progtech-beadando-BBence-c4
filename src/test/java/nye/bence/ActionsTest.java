@@ -6,6 +6,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionsTest {
 
+    @Test
+    public void testIsBoardFull() {
+        int[][] board = new int[6][7];
+        assertFalse(Actions.isBoardFull(board));
+    }
 
     @Test
     public void testIsValidMove() {
