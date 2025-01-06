@@ -177,7 +177,7 @@ public class UserInterface {
         boolean gameOver = false;
 
         while (!gameOver) {
-            game.getBoard().printBoard(game.getBoard().getBoard());
+            game.getBoard().printBoard(game.getBoard().getMatrix());
             System.out.println("-------------------------------------");
             System.out.print("Enter column to place your piece (1-7) (or type 'exit' to save and quit): ");
             String input = scanner.nextLine();
@@ -195,14 +195,14 @@ public class UserInterface {
                     continue;
                 }
 
-                if (!Actions.canPlace(column - 1, game.getBoard().getBoard())) {
+                if (!Actions.canPlace(column - 1, game.getBoard().getMatrix())) {
                     System.out.println("Column is full. Please choose a different column.");
                     System.out.println("-------------------------------------");
                     continue;
                 }
 
-                if (game.playerPlace(column, game.getBoard().getBoard())) {
-                    game.getBoard().printBoard(game.getBoard().getBoard());
+                if (game.playerPlace(column, game.getBoard().getMatrix())) {
+                    game.getBoard().printBoard(game.getBoard().getMatrix());
                     System.out.println("-------------------------------------");
                     try {
                         database.incrementPlayerWins(player.getName());
@@ -212,13 +212,13 @@ public class UserInterface {
                     }
                     gameOver = true;
                 } else {
-                    if (game.computerPlace(game.getBoard().getBoard())) {
-                        game.getBoard().printBoard(game.getBoard().getBoard());
+                    if (game.computerPlace(game.getBoard().getMatrix())) {
+                        game.getBoard().printBoard(game.getBoard().getMatrix());
                         System.out.println("-------------------------------------");
                         System.out.println("The computer won. Better luck next time!");
                         gameOver = true;
-                    } else if (Actions.isBoardFull(game.getBoard().getBoard())) {
-                        game.getBoard().printBoard(game.getBoard().getBoard());
+                    } else if (Actions.isBoardFull(game.getBoard().getMatrix())) {
+                        game.getBoard().printBoard(game.getBoard().getMatrix());
                         System.out.println("-------------------------------------");
                         System.out.println("It's a tie!");
                         gameOver = true;

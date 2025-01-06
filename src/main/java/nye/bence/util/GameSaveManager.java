@@ -39,8 +39,7 @@ public final class GameSaveManager {
      */
     public static void saveGame(final Board board, final Player player) {
         try {
-            DocumentBuilderFactory docFactory =
-                    DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
             // Root element

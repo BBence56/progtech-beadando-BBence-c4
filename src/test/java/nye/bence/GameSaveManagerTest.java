@@ -45,7 +45,7 @@ public class GameSaveManagerTest {
         GameSaveManager.saveGame(board, player);
         Board loadedBoard = GameSaveManager.loadGame(player);
         assertNotNull(loadedBoard, "Loaded board should not be null.");
-        assertArrayEquals(board.getBoard(), loadedBoard.getBoard(), "Loaded board should match the saved board.");
+        assertArrayEquals(board.getMatrix(), loadedBoard.getMatrix(), "Loaded board should match the saved board.");
     }
 
     @Test

@@ -23,14 +23,14 @@ public class GameTest {
 
     @Test
     public void testPlayerPlace() {
-        int[][] board = game.getBoard().getBoard();
+        int[][] board = game.getBoard().getMatrix();
         assertFalse(game.playerPlace(0, board));
         assertEquals(1, board[5][0]);
     }
 
     @Test
     public void testComputerPlace() {
-        int[][] board = game.getBoard().getBoard();
+        int[][] board = game.getBoard().getMatrix();
         assertFalse(game.computerPlace(board));
         boolean piecePlaced = false;
         for (int i = 0; i < Board.SIZE_Y; i++) {

@@ -37,7 +37,7 @@ public class Board {
      *
      * @return the 2D array representing the board
      */
-    public int[][] getBoard() {
+    public int[][] getMatrix() {
         return board;
     }
 
