@@ -11,11 +11,6 @@ import java.sql.SQLException;
  */
 public final class App {
 
-    // Private constructor to prevent instantiation
-    private App() {
-        throw new UnsupportedOperationException("Utility class");
-    }
-
     /**
      * Main method to run the application.
      *
