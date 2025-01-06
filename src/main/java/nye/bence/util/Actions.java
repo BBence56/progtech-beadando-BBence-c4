@@ -12,6 +12,10 @@ public final class Actions {
         throw new UnsupportedOperationException("Utility class");
     }
 
+    public static boolean canPlace(final int x, final int[][] board) {
+        return board[0][x] == 0;
+    }
+
     /**
      * Places a piece on the board.
      *
@@ -30,6 +34,18 @@ public final class Actions {
                 break;
             }
         }
+    }
+
+    public static boolean isBoardFull(final int[][] board) {
+        for (int[] row : board) {
+            for (int cell : row) {
+                if (cell == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+
     }
 
     /**

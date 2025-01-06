@@ -7,6 +7,7 @@ import nye.bence.database.Database;
 import nye.bence.game.Board;
 import nye.bence.game.Game;
 import nye.bence.user.Player;
+import nye.bence.util.Actions;
 import nye.bence.util.GameSaveManager;
 
 /**
@@ -177,13 +178,8 @@ public class UserInterface {
 
         while (!gameOver) {
             game.getBoard().printBoard(game.getBoard().getBoard());
-            System.out.println(
-                    "-------------------------------------"
-            );
-            System.out.print(
-                              "Enter column to place your piece"
-                            + " (or type 'exit' to save and quit): "
-            );
+            System.out.println("-------------------------------------");
+            System.out.print("Enter column to place your piece (1-7) (or type 'exit' to save and quit): ");
             String input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("exit")) {
@@ -191,33 +187,45 @@ public class UserInterface {
                 return;
             }
 
-            int column = Integer.parseInt(input);
+            try {
+                int column = Integer.parseInt(input);
+                if (column < 1 || column > 7) {
+                    System.out.println("Invalid input. Please enter a number between 1 and 7.");
+                    System.out.println("-------------------------------------");
+                    continue;
+                }
 
-            if (game.playerPlace(column, game.getBoard().getBoard())) {
-                game.getBoard().printBoard(game.getBoard().getBoard());
-                System.out.println(
-                        "-------------------------------------"
-                );
-                try {
-                    database.incrementPlayerWins(player.getName());
-                    System.out.println(
-                            "You won! Your win count has been updated."
-                    );
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                if (!Actions.canPlace(column - 1, game.getBoard().getBoard())) {
+                    System.out.println("Column is full. Please choose a different column.");
+                    System.out.println("-------------------------------------");
+                    continue;
                 }
-                gameOver = true;
-            } else {
-                if (game.computerPlace(game.getBoard().getBoard())) {
+
+                if (game.playerPlace(column, game.getBoard().getBoard())) {
                     game.getBoard().printBoard(game.getBoard().getBoard());
-                    System.out.println(
-                            "-------------------------------------"
-                    );
-                    System.out.println(
-                            "The computer won. Better luck next time!"
-                    );
+                    System.out.println("-------------------------------------");
+                    try {
+                        database.incrementPlayerWins(player.getName());
+                        System.out.println("You won! Your win count has been updated.");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     gameOver = true;
+                } else {
+                    if (game.computerPlace(game.getBoard().getBoard())) {
+                        game.getBoard().printBoard(game.getBoard().getBoard());
+                        System.out.println("-------------------------------------");
+                        System.out.println("The computer won. Better luck next time!");
+                        gameOver = true;
+                    } else if (Actions.isBoardFull(game.getBoard().getBoard())) {
+                        game.getBoard().printBoard(game.getBoard().getBoard());
+                        System.out.println("-------------------------------------");
+                        System.out.println("It's a tie!");
+                        gameOver = true;
+                    }
                 }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
             }
         }
     }

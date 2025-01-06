@@ -45,7 +45,7 @@ public class Game {
      * @return true if the game is over, false otherwise
      */
     public boolean playerPlace(final int x, final int[][] b) {
-        Actions.place(x, b, Board.SIZE_Y, 1);
+        Actions.place(x-1, b, Board.SIZE_Y, 1);
         return Actions.isOver(b, Board.SIZE_X, Board.SIZE_Y);
     }
 

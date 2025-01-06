@@ -43,13 +43,4 @@ public class Player {
     public int getWins() {
         return wins;
     }
-
-    /**
-     * Sets the number of wins the player has.
-     *
-     * @param winsParam the number of wins to set
-     */
-    public void setWins(final int winsParam) {
-        this.wins = winsParam;
-    }
 }

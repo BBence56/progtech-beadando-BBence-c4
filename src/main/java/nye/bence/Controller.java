@@ -53,5 +53,6 @@ public class Controller {
         }
         System.out.println("-------------------------------------");
         System.out.println("Game closed. Goodbye!");
+        System.out.println("-------------------------------------");
     }
 }
