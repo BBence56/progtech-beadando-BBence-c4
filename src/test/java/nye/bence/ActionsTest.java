@@ -6,6 +6,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionsTest {
 
+
+    @Test
+    public void testIsValidMove() {
+        int[][] board = new int[6][7];
+        assertTrue(Actions.canPlace(0, board));
+    }
+
+    @Test
+    public void testIsNotValidMove() {
+        int[][] board = new int[6][7];
+        for (int i = 0; i < 6; i++) {
+            board[i][0] = 1;
+        }
+        assertFalse(Actions.canPlace(0, board));
+    }
+
     @Test
     public void testPlace() {
         int[][] board = new int[6][7];
