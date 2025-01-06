@@ -24,7 +24,7 @@ public class GameTest {
     @Test
     public void testPlayerPlace() {
         int[][] board = game.getBoard().getMatrix();
-        assertFalse(game.playerPlace(0, board));
+        assertFalse(game.playerPlace(1, board));
         assertEquals(1, board[5][0]);
     }
 

@@ -59,7 +59,7 @@ public final class GameSaveManager {
             Element boardElement = doc.createElement("board");
             rootElement.appendChild(boardElement);
 
-            int[][] boardArray = board.getBoard();
+            int[][] boardArray = board.getMatrix();
             for (int y = 0; y < Board.SIZE_Y; y++) {
                 for (int x = 0; x < Board.SIZE_X; x++) {
                     Element cell = doc.createElement("cell");
@@ -109,7 +109,7 @@ public final class GameSaveManager {
 
             NodeList cellList = doc.getElementsByTagName("cell");
             Board board = new Board();
-            int[][] boardArray = board.getBoard();
+            int[][] boardArray = board.getMatrix();
 
             for (int i = 0; i < cellList.getLength(); i++) {
                 Element cell = (Element) cellList.item(i);
