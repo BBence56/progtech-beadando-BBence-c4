@@ -7,6 +7,7 @@ Neptun kód: TQOXFC
 
 
 features:
+
   Teljes Connect 4 játék.
   
   Felhasználói fiók mentése egy adatbázisba, top 20 játékos kiírása.
@@ -15,12 +16,14 @@ features:
   
 
 repoban:
+
   A teljes source code.
   
   3 Tervezési minta leírása a "Tervezésiminta.pdf"-ben (A projectre a legjobban az "MVC" illik de nem 100%-ban)
   
   
 maven:
+
   Unit testek lefedettséfét nem tudtam megnézni mivel nem akart működni a jacoco de a codebase nagy rész le van tesztelve.
 
   mvn clean install command hiba nélkül le fut.
