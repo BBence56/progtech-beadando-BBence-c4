@@ -24,7 +24,7 @@ repoban:
   
 maven:
 
-  Unit testek lefedettséfét nem tudtam megnézni mivel nem akart működni a jacoco de a codebase nagy rész le van tesztelve.
+  Unit testek lefedettséfét nem tudtam megnézni mivel nem akart működni a jacoco de a codebase nagy része le van tesztelve.
 
   mvn clean install command hiba nélkül le fut.
   
