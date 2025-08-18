@@ -6,7 +6,7 @@ Név: Baran Bence Róbert
 Neptun kód: TQOXFC
 
 
-features:
+"features":
 
   Teljes Connect 4 játék.
   
