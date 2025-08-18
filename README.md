@@ -19,7 +19,7 @@ repoban:
 
   A teljes source code.
   
-  3 Tervezési minta leírása a "Tervezésiminta.pdf"-ben (A projectre a legjobban az "MVC" illik de nem 100%-ban)
+  3 Tervezési minta leírása a "Tervezésiminta.pdf"-ben
   
   
 maven:
