@@ -1,7 +1,7 @@
 package nye.bence.database;
 
 import java.io.File;
-import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,12 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import nye.bence.user.Player;
 
 /**
  * Database class for managing player data.
  */
 public class Database {
+
+    private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
+    private static final String DATABASE_NAME = "connect4.db";
 
     /**
      * The connection to the database.
@@ -23,14 +27,24 @@ public class Database {
 
     /**
      * Constructs a new Database with the default connection.
+     * Creates database in user home directory if it doesn't exist.
+     * Automatically runs migrations on initialization.
      */
     public Database() throws SQLException {
-        URL resource = getClass().getClassLoader().getResource("database.db");
-        if (resource == null) {
-            throw new SQLException("Database file not found in resources.");
-        }
-        String url = "jdbc:sqlite:" + new File(resource.getFile()).getAbsolutePath();
+        String dbPath = getOrCreateDatabasePath();
+        String url = "jdbc:sqlite:" + dbPath;
+
+        LOGGER.info("Connecting to database at: " + dbPath);
         this.connection = DriverManager.getConnection(url);
+
+        // Run migrations
+        DatabaseMigration migration = new DatabaseMigration(this.connection);
+        migration.migrate();
+
+        // Validate schema
+        migration.validateSchema();
+
+        LOGGER.info("Database initialized successfully.");
     }
 
     /**
@@ -40,6 +54,35 @@ public class Database {
      */
     public Database(Connection connection) {
         this.connection = connection;
+    }
+
+    /**
+     * Gets or creates the database file path.
+     * Database is stored in user's home directory under .connect4/ folder.
+     *
+     * @return the absolute path to the database file
+     * @throws SQLException if directory creation fails
+     */
+    private String getOrCreateDatabasePath() throws SQLException {
+        try {
+            String homeDir = System.getProperty("user.home");
+            String dataDir = Paths.get(homeDir, ".connect4").toString();
+            File dataDirFile = new File(dataDir);
+
+            if (!dataDirFile.exists()) {
+                if (!dataDirFile.mkdirs()) {
+                    throw new SQLException("Failed to create data directory: " + dataDir);
+                }
+                LOGGER.info("Created data directory: " + dataDir);
+            }
+
+            String dbPath = Paths.get(dataDir, DATABASE_NAME).toString();
+            LOGGER.info("Database path: " + dbPath);
+
+            return dbPath;
+        } catch (Exception e) {
+            throw new SQLException("Failed to initialize database path", e);
+        }
     }
 
     /**

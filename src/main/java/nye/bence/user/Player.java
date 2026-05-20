@@ -43,4 +43,11 @@ public class Player {
     public int getWins() {
         return wins;
     }
+
+    /**
+     * Increments the player's win count.
+     */
+    public void incrementWins() {
+        wins++;
+    }
 }

@@ -1,10 +1,10 @@
 package nye.bence;
 
 import nye.bence.database.Database;
-import nye.bence.ui.UserInterface;
-
+import nye.bence.ui.gui.GuiUserInterface;
 
 import java.sql.SQLException;
+import javax.swing.SwingUtilities;
 
 /**
  * Main application class.
@@ -26,9 +26,15 @@ public final class App {
         }
 
         Database database = new Database();
-        UserInterface userInterface = new UserInterface(database);
-        Controller controller = new Controller(database, userInterface);
 
-        controller.run();
+        // Launch GUI on Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new GuiUserInterface(database);
+            } catch (SQLException e) {
+                System.err.println("Failed to initialize GUI: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 }

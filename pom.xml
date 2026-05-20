@@ -58,6 +58,8 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.db</include>
+          <include>migrations/**/*.sql</include>
+          <include>migrations/**/*.md</include>
         </includes>
       </resource>
     </resources>
