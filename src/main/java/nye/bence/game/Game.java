@@ -2,6 +2,7 @@ package nye.bence.game;
 
 import nye.bence.user.Player;
 import nye.bence.util.Actions;
+import nye.bence.util.MinimaxAI;
 
 /**
  * Represents a game session.
@@ -45,18 +46,21 @@ public class Game {
      * @return true if the game is over, false otherwise
      */
     public boolean playerPlace(final int x, final int[][] b) {
-        Actions.place(x-1, b, Board.SIZE_Y, 1);
+        Actions.place(x - 1, b, Board.SIZE_Y, 1);
         return Actions.isOver(b, Board.SIZE_X, Board.SIZE_Y);
     }
 
     /**
-     * Places the computer's piece on the board.
+     * Places the computer's piece on the board using minimax algorithm.
      *
      * @param b the board
      * @return true if the game is over, false otherwise
      */
     public boolean computerPlace(final int[][] b) {
-        int x = (int) (Math.random() * Board.SIZE_X);
+        int x = MinimaxAI.getBestMove(b);
+        if (x < 0) {
+            return Actions.isOver(b, Board.SIZE_X, Board.SIZE_Y);
+        }
         Actions.place(x, b, Board.SIZE_Y, 2);
         return Actions.isOver(b, Board.SIZE_X, Board.SIZE_Y);
     }

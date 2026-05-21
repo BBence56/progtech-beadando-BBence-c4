@@ -1,14 +1,13 @@
 package nye.bence;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import nye.bence.game.Board;
 import nye.bence.game.Game;
 import nye.bence.user.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class GameTest {
 
@@ -42,6 +41,17 @@ public class GameTest {
             }
         }
         assertTrue(piecePlaced);
+    }
+
+    @Test
+    public void testComputerPlaceUsesWinningMove() {
+        int[][] board = game.getBoard().getMatrix();
+        board[5][0] = 2;
+        board[5][1] = 2;
+        board[5][2] = 2;
+
+        assertTrue(game.computerPlace(board));
+        assertEquals(2, board[5][3]);
     }
 
     @Test

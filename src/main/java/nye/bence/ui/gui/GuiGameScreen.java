@@ -1,5 +1,13 @@
 package nye.bence.ui.gui;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import nye.bence.database.Database;
 import nye.bence.game.Board;
 import nye.bence.game.Game;
@@ -7,18 +15,9 @@ import nye.bence.user.Player;
 import nye.bence.util.Actions;
 import nye.bence.util.GameSaveManager;
 
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-
 /**
  * Interactive Connect-4 game screen.
- * 
+ *
  * Features:
  * - Mouse-click column selection
  * - Real-time board rendering
@@ -33,12 +32,12 @@ public class GuiGameScreen extends GuiScreen {
     private Player currentPlayer;
     private boolean gameOver;
     private boolean isComputerTurn;
-    
+
     // Board rendering
     private final int cellSize = 70;
     private final int padding = 15;
     private int hoveredColumn = -1; // -1 means no column hovered
-    
+
     // UI Components
     private JLabel statusLabel;
     private JLabel playerLabel;
@@ -120,17 +119,28 @@ public class GuiGameScreen extends GuiScreen {
 
         JScrollPane scrollPane = new JScrollPane(boardTable);
         scrollPane.setBorder(null);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+        );
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setOpaque(false);
 
         JPanel boardContainer = new JPanel(new BorderLayout());
         boardContainer.setOpaque(false);
-        boardContainer.setBorder(BorderFactory.createCompoundBorder(
+        boardContainer.setBorder(
+            BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 3),
-                BorderFactory.createEmptyBorder(padding, padding, padding, padding)
-        ));
+                BorderFactory.createEmptyBorder(
+                    padding,
+                    padding,
+                    padding,
+                    padding
+                )
+            )
+        );
         boardContainer.add(scrollPane, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new GridBagLayout());
@@ -148,7 +158,8 @@ public class GuiGameScreen extends GuiScreen {
     private void configureBoardTable(JTable table) {
         table.setRowHeight(cellSize);
         table.setPreferredScrollableViewportSize(
-                new Dimension(Board.SIZE_X * cellSize, Board.SIZE_Y * cellSize));
+            new Dimension(Board.SIZE_X * cellSize, Board.SIZE_Y * cellSize)
+        );
         table.setTableHeader(null);
         table.setShowGrid(true);
         table.setShowHorizontalLines(true);
@@ -169,32 +180,36 @@ public class GuiGameScreen extends GuiScreen {
             column.setResizable(false);
         }
 
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (!gameOver && !isComputerTurn && game != null) {
-                    handleBoardClick(e);
+        table.addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (!gameOver && !isComputerTurn && game != null) {
+                        handleBoardClick(e);
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hoveredColumn = -1;
+                    table.repaint();
                 }
             }
+        );
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                hoveredColumn = -1;
-                table.repaint();
-            }
-        });
+        table.addMouseMotionListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    updateHoveredColumn(e);
+                }
 
-        table.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                updateHoveredColumn(e);
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    updateHoveredColumn(e);
+                }
             }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                updateHoveredColumn(e);
-            }
-        });
+        );
     }
 
     /**
@@ -258,35 +273,26 @@ public class GuiGameScreen extends GuiScreen {
     }
 
     /**
-     * Selects a random column that can accept a piece.
-     *
-     * @return a valid column index
-     */
-    private int selectRandomAvailableColumn() {
-        int column;
-        do {
-            column = (int) (Math.random() * Board.SIZE_X);
-        } while (!Actions.canPlace(column, game.getBoard().getMatrix()));
-        return column;
-    }
-
-    /**
      * Handles player clicking on a column to place a piece.
      *
      * @param e the mouse event
      */
     private void handleBoardClick(MouseEvent e) {
-       int col = getColumnFromEvent(e);
+        int col = getColumnFromEvent(e);
 
-       // Validate column
-       if (col < 0) {
-           return;
+        // Validate column
+        if (col < 0) {
+            return;
         }
 
         // Check if column can accept a piece
         if (!Actions.canPlace(col, game.getBoard().getMatrix())) {
-            JOptionPane.showMessageDialog(this, "Column is full! Choose another column.", 
-                    "Invalid Move", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                this,
+                "Column is full! Choose another column.",
+                "Invalid Move",
+                JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
@@ -296,7 +302,13 @@ public class GuiGameScreen extends GuiScreen {
         refreshBoard();
 
         // Check if player won
-        if (Actions.isOver(game.getBoard().getMatrix(), Board.SIZE_X, Board.SIZE_Y)) {
+        if (
+            Actions.isOver(
+                game.getBoard().getMatrix(),
+                Board.SIZE_X,
+                Board.SIZE_Y
+            )
+        ) {
             endGame("You won!", true);
             return;
         }
@@ -316,16 +328,16 @@ public class GuiGameScreen extends GuiScreen {
      *
      */
     private void playComputerMove() {
-       isComputerTurn = true;
-       statusLabel.setText("Computer's turn...");
-       refreshBoard();
+        isComputerTurn = true;
+        statusLabel.setText("Computer's turn...");
+        refreshBoard();
 
-       // 1-second delay before computer move
-       Timer timer = new Timer(1000, e -> {
-           executeComputerMove();
-       });
-       timer.setRepeats(false);
-       timer.start();
+        // 1-second delay before computer move
+        Timer timer = new Timer(1000, e -> {
+            executeComputerMove();
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     /**
@@ -333,22 +345,19 @@ public class GuiGameScreen extends GuiScreen {
      *
      */
     private void executeComputerMove() {
-       // Find valid column for computer (random)
-       int computerCol = selectRandomAvailableColumn();
+        int[][] board = game.getBoard().getMatrix();
+        boolean computerWon = game.computerPlace(board);
 
-       // Place computer piece
-       Actions.place(computerCol, game.getBoard().getMatrix(), Board.SIZE_Y, 2);
-
-       refreshBoard();
+        refreshBoard();
 
         // Check if computer won
-        if (Actions.isOver(game.getBoard().getMatrix(), Board.SIZE_X, Board.SIZE_Y)) {
+        if (computerWon) {
             endGame("Computer won!", false);
             return;
         }
 
         // Check if board is full (tie)
-        if (Actions.isBoardFull(game.getBoard().getMatrix())) {
+        if (Actions.isBoardFull(board)) {
             endGame("It's a tie!", false);
             return;
         }
@@ -375,22 +384,25 @@ public class GuiGameScreen extends GuiScreen {
                 database.incrementPlayerWins(currentPlayer.getName());
                 currentPlayer.incrementWins();
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, 
-                        "Error updating wins: " + e.getMessage(), 
-                        "Database Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error updating wins: " + e.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
             }
         }
 
         // Show end game dialog
         int option = JOptionPane.showOptionDialog(
-                this,
-                message + "\n\nPlay again?",
-                "Game Over",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                new String[]{"New Game", "Main Menu"},
-                "Main Menu"
+            this,
+            message + "\n\nPlay again?",
+            "Game Over",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            new String[] {"New Game", "Main Menu"},
+            "Main Menu"
         );
 
         if (option == 0) {
@@ -408,7 +420,12 @@ public class GuiGameScreen extends GuiScreen {
     private void handleExit(boolean shouldSave) {
         if (shouldSave && game != null && currentPlayer != null) {
             GameSaveManager.saveGame(game.getBoard(), currentPlayer);
-            JOptionPane.showMessageDialog(this, "Game saved!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                this,
+                "Game saved!",
+                "Info",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         }
         screenManager.showScreen("mainMenu");
     }
@@ -458,7 +475,10 @@ public class GuiGameScreen extends GuiScreen {
      * Cell renderer that draws the board background, hover highlight,
      * and the red/blue player pieces.
      */
-    private class BoardCellRenderer extends JPanel implements TableCellRenderer {
+    private class BoardCellRenderer
+        extends JPanel
+        implements TableCellRenderer
+    {
 
         private int piece;
         private boolean hovered;
@@ -468,12 +488,14 @@ public class GuiGameScreen extends GuiScreen {
         }
 
         @Override
-        public Component getTableCellRendererComponent(JTable table,
-                                                       Object value,
-                                                       boolean isSelected,
-                                                       boolean hasFocus,
-                                                       int row,
-                                                       int column) {
+        public Component getTableCellRendererComponent(
+            JTable table,
+            Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
             piece = value instanceof Integer ? (Integer) value : 0;
             hovered = column == hoveredColumn && !gameOver && !isComputerTurn;
             return this;
@@ -482,8 +504,8 @@ public class GuiGameScreen extends GuiScreen {
         @Override
         protected void paintComponent(Graphics g) {
             Color baseColor = hovered
-                    ? new Color(255, 255, 100)
-                    : new Color(50, 80, 150);
+                ? new Color(255, 255, 100)
+                : new Color(50, 80, 150);
             setBackground(baseColor);
             super.paintComponent(g);
 
@@ -492,7 +514,10 @@ public class GuiGameScreen extends GuiScreen {
             }
 
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+            );
 
             int diameter = Math.min(getWidth(), getHeight()) - 10;
             int x = (getWidth() - diameter) / 2;
